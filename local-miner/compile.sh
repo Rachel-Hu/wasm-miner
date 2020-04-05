@@ -2,6 +2,7 @@ emcc \
 --bind miner.cpp \
 -o miner.html \
 -g4 \
+-O3 \
 -s EXIT_RUNTIME=1 \
 -s ALLOW_MEMORY_GROWTH=1 \
 -s ASYNCIFY \
