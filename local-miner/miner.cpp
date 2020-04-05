@@ -322,6 +322,8 @@ void main_loop() {
 }
 
 int main() {
+    printf("Starting...\n");
+    emscripten_sleep(300);
     emscripten_set_main_loop(main_loop, 60, true);
 	return 0;
 }

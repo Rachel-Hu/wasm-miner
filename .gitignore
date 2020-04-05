@@ -1,6 +1,6 @@
 .vscode
 .DS_Store
 dag
-local-miner/miner.js
-local-miner/miner.wasm
-local-miner/miner.wasm.map
+**.js
+**.wasm
+**.wasm.map
