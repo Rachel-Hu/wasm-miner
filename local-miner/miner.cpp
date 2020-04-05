@@ -1,3 +1,8 @@
+/*
+ * Reference
+ * https://github.com/ethereum/ethash/blob/master/js/ethash.js
+ */
+
 #include <time.h>
 #include <string.h>
 #include <math.h>
@@ -9,10 +14,13 @@
 #include <fstream>
 #include "miner.h"
 
+#include <emscripten.h>
+
 unsigned int * dag;
 unsigned int numSlicesLocal;
 unsigned int cacheHit = 0;
 unsigned int numAccesses = 0;
+
 
 class Params {
 	public:
@@ -247,12 +255,15 @@ void deserialize(std::string str, unsigned int * outArr, unsigned int size) {
 double mine(std::string headerStr, std::string cacheStr, std::string dagStr, 
 		unsigned int startIndex, unsigned int endIndex, unsigned int cacheSize, 
 		unsigned int dagSize) {
+
+
 	// the hash must be less than the following for the nonce to be a valid solutions
 	srand(time(NULL));
 	Params params(cacheSize,dagSize);
 	unsigned int header[8];
-	numSlicesLocal = 16777186;
+    numSlicesLocal = 10000; // 16777186
 	unsigned int * cache = new unsigned int[cacheSize];
+    printf("setting dag to int array of size %d\n", numSlicesLocal*16);
 	dag = new unsigned int[numSlicesLocal*16]();
 
 	deserialize(headerStr,header,8);
@@ -261,7 +272,7 @@ double mine(std::string headerStr, std::string cacheStr, std::string dagStr,
 	
 	Ethash hasher(&params, cache);	
 	unsigned int nonce[] = {0,0};
-	unsigned int trials = 4500000;
+	unsigned int trials = 450000; // 4500000;
 	unsigned int * hash;
 
 	// timing the hashes
@@ -272,6 +283,8 @@ double mine(std::string headerStr, std::string cacheStr, std::string dagStr,
   	int interval = 10000;
 
   	start = std::chrono::high_resolution_clock::now();
+   
+     
 	for (int i = 0; i < trials; i++) {
 		hash = hasher.hash(header, nonce);
 		nonce[rand() % 2] = rand() % ((unsigned int)0xffffffff);
@@ -281,21 +294,34 @@ double mine(std::string headerStr, std::string cacheStr, std::string dagStr,
 			hashRate = 1000.0*interval/(time.count());
 			printf("c %d:  %f\n",i,((float)cacheHit/(float)numAccesses));
 			printf("h %d:  %f\n",i,hashRate);
+
+            emscripten_sleep(100); // sleep to allow screen to refresh
 			cacheHit = 0;
 			numAccesses = 0;
 			start = std::chrono::high_resolution_clock::now();
 		}
 			
 	}
+    
 	return hashRate;
 }
 
+void main_loop() {
+    int ret = 0;
+    double rate = 0;
 
-int main() {
 	std::ifstream t("dag_hex.txt");
 	std::stringstream buffer;
 	buffer << t.rdbuf();
-	double rate = mine("387d4d41", "8f1e678b", buffer.str(), 0, 1000, 1024, 1024);
-	printf("Client average hashrate: %f\n", rate);
+
+    while (true) {
+	    rate = mine("387d4d41", "8f1e678b", buffer.str(), 0, 1000, 1024, 1024);
+	    printf("Client average hashrate: %f\n", rate);
+        emscripten_sleep(3000); // sleep to allow screen to refresh
+    }
+}
+
+int main() {
+    emscripten_set_main_loop(main_loop, 60, true);
 	return 0;
 }
