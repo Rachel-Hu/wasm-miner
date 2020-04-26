@@ -314,7 +314,7 @@ double mine(std::string headerStr, std::string cacheStr, std::string dagStr,
 			stop = std::chrono::high_resolution_clock::now();
 			time = stop - start;
 			hashRate = 1000.0 * interval / (time.count());
-			printf("c %d:  %f\n", i, ((float)cacheHit / (float)numAccesses));
+			//printf("c %d:  %f\n", i, ((float)cacheHit / (float)numAccesses));
 			printf("h %d:  %f\n", i, hashRate);
 
 			cacheHit = 0;
