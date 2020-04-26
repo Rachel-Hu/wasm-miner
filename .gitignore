@@ -1,6 +1,5 @@
 .vscode
 .DS_Store
 dag
-**.js
 **.wasm
 **.wasm.map

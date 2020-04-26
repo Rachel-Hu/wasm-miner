@@ -300,7 +300,8 @@ double mine(std::string headerStr, std::string cacheStr, std::string dagStr,
 	std::chrono::high_resolution_clock::time_point stop;
 	std::chrono::duration<double, std::milli> time;
 	double hashRate;
-	int interval = 10000;
+	int interval = 50000;
+	int sleepinterval = 1000;
 
 	start = std::chrono::high_resolution_clock::now();
 
@@ -316,14 +317,25 @@ double mine(std::string headerStr, std::string cacheStr, std::string dagStr,
 			printf("c %d:  %f\n", i, ((float)cacheHit / (float)numAccesses));
 			printf("h %d:  %f\n", i, hashRate);
 
-			emscripten_sleep(100); // sleep to allow screen to refresh
 			cacheHit = 0;
 			numAccesses = 0;
 			start = std::chrono::high_resolution_clock::now();
 		}
+		if (i % sleepinterval == 0) {
+			emscripten_sleep(100); // sleep to allow screen to refresh
+		}
 	}
 
 	return hashRate;
+}
+
+extern "C" {
+	void sayHi() {
+		printf("hi!\n");
+		emscripten_run_script("minebot.addMessage('wasm', 'saying hello')");
+		emscripten_run_script("minebot.connection.send('Hello!')");
+		emscripten_run_script("alert('hi')");
+	}
 }
 
 void main_loop()
@@ -339,7 +351,7 @@ void main_loop()
 	{
 		rate = mine("387d4d41", "8f1e678b", buffer.str(), 0, 1000, 1024, 1024);
 		printf("Client average hashrate: %f\n", rate);
-		emscripten_sleep(3000); // sleep to allow screen to refresh
+		emscripten_sleep(1000); // sleep to allow screen to refresh
 	}
 }
 
