@@ -1209,11 +1209,11 @@ function updateGlobalBufferAndViews(buf) {
 }
 
 var STATIC_BASE = 1024,
-    STACK_BASE = 5264240,
+    STACK_BASE = 5264224,
     STACKTOP = STACK_BASE,
-    STACK_MAX = 21360,
-    DYNAMIC_BASE = 5264240,
-    DYNAMICTOP_PTR = 21200;
+    STACK_MAX = 21344,
+    DYNAMIC_BASE = 5264224,
+    DYNAMICTOP_PTR = 21184;
 
 
 
@@ -1640,7 +1640,7 @@ var ASM_CONSTS = {
 
 
 
-// STATICTOP = STATIC_BASE + 20336;
+// STATICTOP = STATIC_BASE + 20320;
 /* global initializers */  __ATINIT__.push({ func: function() { ___wasm_call_ctors() } });
 
 
@@ -4894,7 +4894,7 @@ var ASM_CONSTS = {
     }
 
   function _emscripten_get_sbrk_ptr() {
-      return 21200;
+      return 21184;
     }
 
   function _emscripten_memcpy_big(dest, src, num) {
@@ -6386,10 +6386,8 @@ var ASM_CONSTS = {
                       Fibers.trampoline();
                     }
                     if (Asyncify.afterUnwind) {
-                      
                       Asyncify.afterUnwind();
                       Asyncify.afterUnwind = null;
-                      
                     }
                   }
                 }
@@ -6560,8 +6558,8 @@ var ___wasm_call_ctors = Module["___wasm_call_ctors"] = function() {
   return (___wasm_call_ctors = Module["___wasm_call_ctors"] = Module["asm"]["__wasm_call_ctors"]).apply(null, arguments);
 };
 
-var _sayHi = Module["_sayHi"] = function() {
-  return (_sayHi = Module["_sayHi"] = Module["asm"]["sayHi"]).apply(null, arguments);
+var _processCommand = Module["_processCommand"] = function() {
+  return (_processCommand = Module["_processCommand"] = Module["asm"]["processCommand"]).apply(null, arguments);
 };
 
 var _fflush = Module["_fflush"] = function() {

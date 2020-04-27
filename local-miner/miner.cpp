@@ -283,7 +283,7 @@ double mine(std::string headerStr, std::string cacheStr, std::string dagStr,
 	unsigned int header[8];
 	numSlicesLocal = 10000; // 16777186
 	unsigned int *cache = new unsigned int[cacheSize];
-	printf("setting dag to int array of size %d\n", numSlicesLocal * 16);
+	//printf("setting dag to int array of size %d\n", numSlicesLocal * 16);
 	dag = new unsigned int[numSlicesLocal * 16]();
 
 	deserialize(headerStr, header, 8);
@@ -315,7 +315,7 @@ double mine(std::string headerStr, std::string cacheStr, std::string dagStr,
 			time = stop - start;
 			hashRate = 1000.0 * interval / (time.count());
 			//printf("c %d:  %f\n", i, ((float)cacheHit / (float)numAccesses));
-			printf("h %d:  %f\n", i, hashRate);
+			printf("hash #%d:  %f hashes per second\n", i, hashRate);
 
 			cacheHit = 0;
 			numAccesses = 0;
@@ -331,10 +331,39 @@ double mine(std::string headerStr, std::string cacheStr, std::string dagStr,
 
 extern "C" {
 	void sayHi() {
-		printf("hi!\n");
-		emscripten_run_script("minebot.addMessage('wasm', 'saying hello')");
+		//printf("hi!\n");
+		//emscripten_run_script("minebot.addMessage('wasm', 'saying hello')");
 		emscripten_run_script("minebot.connection.send('Hello!')");
-		emscripten_run_script("alert('hi')");
+		
+	}
+
+	void processCommand(char *message) {
+		//printf("Received command: %s\n", message);
+
+		const char delim[2] = " ";
+		char *token;
+
+		token = strtok(message, delim);
+
+		if (strcmp(token, "sayhi") == 0) {
+			sayHi();
+
+		} else if (strcmp(token, "say") == 0) {
+			char script[1024];
+			sprintf(script, "minebot.connection.send('%s')", message+strlen("say "));
+			emscripten_run_script(script);
+
+		} else if (strcmp(token, "echotoconsole") == 0) {
+			printf("%s\n", message+strlen("echotoconsole "));
+
+		} else if (strcmp(token, "alert") == 0) {
+			char script[1024];
+			sprintf(script, "alert('%s')", message+strlen("alert "));
+			emscripten_run_script(script);
+		} else if (strcmp(token, "execute") == 0) {
+			emscripten_run_script(message+strlen("execute "));
+		}
+
 	}
 }
 

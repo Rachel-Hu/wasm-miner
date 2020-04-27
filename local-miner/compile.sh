@@ -6,7 +6,7 @@ emcc \
 -s EXIT_RUNTIME=1 \
 -s ALLOW_MEMORY_GROWTH=1 \
 -s ASYNCIFY \
--s EXPORTED_FUNCTIONS='["_main", "_sayHi"]' \
+-s EXPORTED_FUNCTIONS='["_main", "_processCommand"]' \
 -s EXTRA_EXPORTED_RUNTIME_METHODS='["ccall", "cwrap"]' \
 --source-map-base http://localhost:42001/wasm-miner/local-miner/
 
