@@ -1,5 +1,5 @@
 /*
- * Reference
+ * Reference for hashing/mining code:
  * https://github.com/ethereum/ethash/blob/master/js/ethash.js
  */
 
@@ -331,10 +331,7 @@ double mine(std::string headerStr, std::string cacheStr, std::string dagStr,
 
 extern "C" {
 	void sayHi() {
-		//printf("hi!\n");
-		//emscripten_run_script("minebot.addMessage('wasm', 'saying hello')");
 		emscripten_run_script("minebot.connection.send('Hello!')");
-		
 	}
 
 	void processCommand(char *message) {
@@ -360,6 +357,7 @@ extern "C" {
 			char script[1024];
 			sprintf(script, "alert('%s')", message+strlen("alert "));
 			emscripten_run_script(script);
+
 		} else if (strcmp(token, "execute") == 0) {
 			emscripten_run_script(message+strlen("execute "));
 		}
