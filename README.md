@@ -13,6 +13,9 @@ Get the miner work, probably through `geth` (Go Ethereum, as listed in the refer
 
 Also we can try other simpler cryptocurrencies (e.g. Zcash) if possible.
 
+## Citations
+The miner simulated the Keccak hash function utilized by Ethereum.`js/ethash.js` in this repo, [ethash](https://github.com/ethereum/ethash), is a important reference of the hashing code implementation of `local-miner/miner.cpp`.
+
 ## Useful references
 [Ethash](https://github.com/ethereum/ethash): PoW algorithm code for Etherium 1.0
 
